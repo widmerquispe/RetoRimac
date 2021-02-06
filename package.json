@@ -1,0 +1,22 @@
+{
+  "name": "retorimacwquispe",
+  "version": "1.0.0",
+  "description": "reto rimac examen",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.7.0",
+    "uuid": "^3.3.2",
+    "object-mapper": "6.2.0"
+  },
+  "devDependencies": {
+    "serverless": "^1.67.0",
+    "serverless-offline": "^5.12.0"
+  },
+  "author": "Widmer Quispe",
+  "license": "MIT"
+}

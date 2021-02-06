@@ -1,0 +1,70 @@
+service: retorimacwquispe
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-2
+  environment:
+    TBL_PERSON: personas
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - cloudwatch:*
+        - logs:*
+      Resource:
+      - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TBL_PERSON}"
+
+functions:
+  getAllPersonApiIntegration:
+    handler: src/service/app.getAllPerson
+    events:
+      - http:
+          method: get
+          path: integration/person
+  getPersonByIDApiIntegration:
+    handler: src/service/app.getPersonByID
+    events:
+      - http:
+          method: get
+          path: integration/person/{id}
+
+  createPerson:
+    handler: src/service/app.createPerson
+    events:
+      - http:
+          method: post
+          path: person
+  getAllPerson:
+    handler: src/service/app.listPerson
+    events:
+      - http:
+          method: get
+          path: person
+
+resources:
+  Resources:
+    PersonDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.TBL_PERSON}          
+
+plugins:
+  - serverless-offline
+
